@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Vincent Ting&#39;s Blog">
 <meta property="og:description" content="添加克隆的第三方仓库遇到的submodule问题今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-11T17:32:29.893Z">
+<meta property="og:updated_time" content="2019-10-11T17:39:04.582Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git submodule trouble">
 <meta name="twitter:description" content="添加克隆的第三方仓库遇到的submodule问题今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我">
@@ -73,23 +73,50 @@
   <article class="content">
     <h1 id="添加克隆的第三方仓库遇到的submodule问题"><a href="#添加克隆的第三方仓库遇到的submodule问题" class="headerlink" title="添加克隆的第三方仓库遇到的submodule问题"></a>添加克隆的第三方仓库遇到的submodule问题</h1><p>今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。</p>
 <p>一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我也没按文件的形式上传呀！于是乎想直接添加submodule，因为我的主题文件夹已经是完整的git项目了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line"><span class="string">'themes/clover'</span> already exists <span class="keyword">in</span> the index</span><br></pre></td></tr></table></figure>
+<pre><code class="bash">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
 
+# 结果
+&#39;themes/clover&#39; already exists in the index</code></pre>
 <p>这样一看是不行，应该是 clone或者commit 的时候默认添加了子模块。可是我的项目下边也没有<code>.gitmodules</code>呀……</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git submodule</span><br><span class="line">fatal: no submodule mapping found <span class="keyword">in</span> .gitmodules <span class="keyword">for</span> path <span class="string">'themes/clover'</span> <span class="comment"># j就没生成 .gitmodule 文件</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="bash">$ git submodule
+fatal: no submodule mapping found in .gitmodules for path &#39;themes/clover&#39; # j就没生成 .gitmodule 文件</code></pre>
 <p>好嘛！那我就删掉重来，结果还是告诉我有问题，他找不到……</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git rm -r themes/clover</span><br><span class="line">fatal: could not lookup name <span class="keyword">for</span> submodule <span class="string">'themes/clover'</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="bash">$ git rm -r themes/clover
+fatal: could not lookup name for submodule &#39;themes/clover&#39;</code></pre>
 <p>在搜索过后，找到了解决方案：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ git rm -r themes/clover --cached</span><br><span class="line">rm <span class="string">'themes/clover'</span></span><br><span class="line"></span><br><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with <span class="string">'origin/master'</span>.</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">"git restore --staged &lt;file&gt;..."</span> to unstage)</span><br><span class="line">        deleted:    themes/clover</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use <span class="string">"git add &lt;file&gt;..."</span> to include <span class="keyword">in</span> what will be committed)</span><br><span class="line">        themes/clover/</span><br></pre></td></tr></table></figure>
+<pre><code class="bash">$ git rm -r themes/clover --cached
+rm &#39;themes/clover&#39;
 
+$ git status
+On branch master
+Your branch is up to date with &#39;origin/master&#39;.
+
+Changes to be committed:
+  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)
+        deleted:    themes/clover
+
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+        themes/clover/
+</code></pre>
 <p>接着先不提交，直接重新添加submodule:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover</span><br><span class="line">Adding existing repo at <span class="string">'themes/clover'</span> to the index</span><br><span class="line"></span><br><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with <span class="string">'origin/master'</span>.</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">"git restore --staged &lt;file&gt;..."</span> to unstage)</span><br><span class="line">        new file:   .gitmodules</span><br></pre></td></tr></table></figure>
+<pre><code class="bash">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
+Adding existing repo at &#39;themes/clover&#39; to the index
 
+$ git status
+On branch master
+Your branch is up to date with &#39;origin/master&#39;.
+
+Changes to be committed:
+  (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)
+        new file:   .gitmodules</code></pre>
 <p>git 自动识别了这个 git 仓库，成功生成了 .gitmodules 文件。这说明添加成功了。将它提交，CI 报错了，克隆不下来。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git submodule update --init --recursive</span><br><span class="line">Submodule <span class="string">'themes/clover'</span> (git@github.com:initialdmg/hexo-theme-clover.git) registered <span class="keyword">for</span> path <span class="string">'themes/clover'</span></span><br><span class="line">Cloning into <span class="string">'/home/travis/build/initialdmg/blog/themes/clover'</span>...</span><br><span class="line">Warning: Permanently added the RSA host key <span class="keyword">for</span> IP address <span class="string">'192.30.253.113'</span> to the list of known hosts.</span><br><span class="line">Permission denied (publickey).</span><br><span class="line">fatal: Could not <span class="built_in">read</span> from remote repository.</span><br></pre></td></tr></table></figure>
-
+<pre><code class="bash">$ git submodule update --init --recursive
+Submodule &#39;themes/clover&#39; (git@github.com:initialdmg/hexo-theme-clover.git) registered for path &#39;themes/clover&#39;
+Cloning into &#39;/home/travis/build/initialdmg/blog/themes/clover&#39;...
+Warning: Permanently added the RSA host key for IP address &#39;192.30.253.113&#39; to the list of known hosts.
+Permission denied (publickey).
+fatal: Could not read from remote repository.</code></pre>
 <p>无法访问这个仓库，应该是没有给 Travis 权限导致的。<a href="https://docs.travis-ci.com/user/customizing-the-build/#git-submodules" target="_blank" rel="noopener">Travis CI 官方是默认支持 Git Submodules</a>，在拉取仓库时会默认拉取子模块的仓库，可以手动关闭该特性。</p>
 <p>由于在使用 git submodule 时，添加了 <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a> 的仓库地址，使用 SSH 的协议，所以拉取失败了，下面提供两个解决方案：</p>
 <ol>
@@ -98,14 +125,24 @@
 </ol>
 <p>将 url 修改为 https 后执行 <code>git submodule sync</code> 将gitconfig的url同步，然后提交就可以成功构建了。</p>
 <h2 id="克隆子模块"><a href="#克隆子模块" class="headerlink" title="克隆子模块"></a>克隆子模块</h2><p>当我们在其他地方进行仓库的克隆时，发现 themes/clover 是个空文件夹，意味着没有安装该主题。那么如何 clone 一个完整的仓库呢？只需如下操作即可：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方式一：使用  submodule init / update</span></span><br><span class="line">git <span class="built_in">clone</span> git@github.com:y0ngb1n/y0ngb1n.github.io.git blog &amp;&amp; <span class="built_in">cd</span> blog</span><br><span class="line">git submodule init &amp;&amp; git submodule update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方式二：添加 --recursive 参数</span></span><br><span class="line">git <span class="built_in">clone</span> git@github.com:y0ngb1n/y0ngb1n.github.io.git --recursive</span><br></pre></td></tr></table></figure>
+<pre><code class="bash"># 方式一：使用  submodule init / update
+git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git blog &amp;&amp; cd blog
+git submodule init &amp;&amp; git submodule update
 
+# 方式二：添加 --recursive 参数
+git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git --recursive</code></pre>
 <p>当该第三方主题更新了，我们可以更新子模块：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git submodule update --remote themes/skapp</span><br></pre></td></tr></table></figure>
-
+<pre><code class="bash">git submodule update --remote themes/skapp</code></pre>
 <p>或者切换至 themes/skapp 目录下使用 git 命令切换到不同的历史版本，如果对子模块执行了相关操作后，会提示 modified: themes/skapp (new commits)：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch <span class="built_in">source</span></span><br><span class="line">Your branch is up to date with <span class="string">'origin/source'</span>.</span><br><span class="line"></span><br><span class="line">Changes not staged <span class="keyword">for</span> commit:</span><br><span class="line">  (use <span class="string">"git add &lt;file&gt;..."</span> to update what will be committed)</span><br><span class="line">  (use <span class="string">"git checkout -- &lt;file&gt;..."</span> to discard changes <span class="keyword">in</span> working directory)</span><br><span class="line"></span><br><span class="line">        modified:   themes/skapp (new commits)</span><br></pre></td></tr></table></figure>
+<pre><code class="bash">$ git status
+On branch source
+Your branch is up to date with &#39;origin/source&#39;.
 
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+
+        modified:   themes/skapp (new commits)</code></pre>
 <p>然后按正常流程提交并推送到远程仓库即可。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://y0ngb1n.github.io/a/2270d168.html" target="_blank" rel="noopener">https://y0ngb1n.github.io/a/2270d168.html</a></li>

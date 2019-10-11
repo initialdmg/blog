@@ -22,11 +22,11 @@ body {
 
 @font-face {
   font-family: 'BebasNeue';
-  src: url("./fonts/BebasNeue.otf"); }
+  src: url("/blog/fonts/BebasNeue.otf"); }
 
 @font-face {
   font-family: 'MaturaScriptCapitals';
-  src: url("./fonts/MaturaMTScriptCapitals.ttf"); }
+  src: url("/blog/fonts/MaturaMTScriptCapitals.ttf"); }
 
 @font-face {
   font-family: 'iconfont';
