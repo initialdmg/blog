@@ -10,7 +10,7 @@ tags:
 
 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我也没按文件的形式上传呀！于是乎想直接添加submodule，因为我的主题文件夹已经是完整的git项目了。
 
-```bash
+```shell
 $ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
 
 # 结果
@@ -19,21 +19,21 @@ $ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clove
 
 这样一看是不行，应该是 clone或者commit 的时候默认添加了子模块。可是我的项目下边也没有`.gitmodules`呀……
 
-```bash
+```shell
 $ git submodule
 fatal: no submodule mapping found in .gitmodules for path 'themes/clover' # j就没生成 .gitmodule 文件
 ```
 
 好嘛！那我就删掉重来，结果还是告诉我有问题，他找不到……
 
-```bash
+```shell
 $ git rm -r themes/clover
 fatal: could not lookup name for submodule 'themes/clover'
 ```
 
 在搜索过后，找到了解决方案：
 
-```bash
+```shell
 $ git rm -r themes/clover --cached
 rm 'themes/clover'
 
@@ -53,7 +53,7 @@ Untracked files:
 
 接着先不提交，直接重新添加submodule:
 
-```bash
+```shell
 $ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
 Adding existing repo at 'themes/clover' to the index
 
@@ -68,7 +68,7 @@ Changes to be committed:
 
 git 自动识别了这个 git 仓库，成功生成了 .gitmodules 文件。这说明添加成功了。将它提交，CI 报错了，克隆不下来。
 
-```bash
+```shell
 $ git submodule update --init --recursive
 Submodule 'themes/clover' (git@github.com:initialdmg/hexo-theme-clover.git) registered for path 'themes/clover'
 Cloning into '/home/travis/build/initialdmg/blog/themes/clover'...
@@ -90,7 +90,7 @@ fatal: Could not read from remote repository.
 
 当我们在其他地方进行仓库的克隆时，发现 themes/clover 是个空文件夹，意味着没有安装该主题。那么如何 clone 一个完整的仓库呢？只需如下操作即可：
 
-```bash
+```shell
 # 方式一：使用  submodule init / update
 git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git blog && cd blog
 git submodule init && git submodule update
@@ -101,12 +101,12 @@ git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git --recursive
 
 当该第三方主题更新了，我们可以更新子模块：
 
-```bash
+```shell
 git submodule update --remote themes/skapp
 ```
 或者切换至 themes/skapp 目录下使用 git 命令切换到不同的历史版本，如果对子模块执行了相关操作后，会提示 modified: themes/skapp (new commits)：
 
-```bash
+```shell
 $ git status
 On branch source
 Your branch is up to date with 'origin/source'.
