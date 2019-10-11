@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'BebasNeue';
-  src: url("/fonts/BebasNeue.otf"); }
+  src: url("./fonts/BebasNeue.otf"); }
 
 @font-face {
   font-family: 'MaturaScriptCapitals';
-  src: url("/fonts/MaturaMTScriptCapitals.ttf"); }
+  src: url("./fonts/MaturaMTScriptCapitals.ttf"); }
 
 @font-face {
   font-family: 'iconfont';
