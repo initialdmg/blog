@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Vincent Ting&#39;s Blog">
 <meta property="og:description" content="添加克隆的第三方仓库遇到的submodule问题今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-11T17:51:57.403Z">
+<meta property="og:updated_time" content="2019-10-11T17:57:57.309Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git submodule trouble">
 <meta name="twitter:description" content="添加克隆的第三方仓库遇到的submodule问题今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我">
@@ -73,18 +73,18 @@
   <article class="content">
     <h1 id="添加克隆的第三方仓库遇到的submodule问题"><a href="#添加克隆的第三方仓库遇到的submodule问题" class="headerlink" title="添加克隆的第三方仓库遇到的submodule问题"></a>添加克隆的第三方仓库遇到的submodule问题</h1><p>今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。</p>
 <p>一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我也没按文件的形式上传呀！于是乎想直接添加submodule，因为我的主题文件夹已经是完整的git项目了。</p>
-<pre><code class="bash">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
+<pre><code class="shell">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
 
 # 结果
 &#39;themes/clover&#39; already exists in the index</code></pre>
 <p>这样一看是不行，应该是 clone或者commit 的时候默认添加了子模块。可是我的项目下边也没有<code>.gitmodules</code>呀……</p>
-<pre><code class="bash">$ git submodule
+<pre><code class="shell">$ git submodule
 fatal: no submodule mapping found in .gitmodules for path &#39;themes/clover&#39; # j就没生成 .gitmodule 文件</code></pre>
 <p>好嘛！那我就删掉重来，结果还是告诉我有问题，他找不到……</p>
-<pre><code class="bash">$ git rm -r themes/clover
+<pre><code class="shell">$ git rm -r themes/clover
 fatal: could not lookup name for submodule &#39;themes/clover&#39;</code></pre>
 <p>在搜索过后，找到了解决方案：</p>
-<pre><code class="bash">$ git rm -r themes/clover --cached
+<pre><code class="shell">$ git rm -r themes/clover --cached
 rm &#39;themes/clover&#39;
 
 $ git status
@@ -100,7 +100,7 @@ Untracked files:
         themes/clover/
 </code></pre>
 <p>接着先不提交，直接重新添加submodule:</p>
-<pre><code class="bash">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
+<pre><code class="shell">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
 Adding existing repo at &#39;themes/clover&#39; to the index
 
 $ git status
@@ -111,7 +111,7 @@ Changes to be committed:
   (use &quot;git restore --staged &lt;file&gt;...&quot; to unstage)
         new file:   .gitmodules</code></pre>
 <p>git 自动识别了这个 git 仓库，成功生成了 .gitmodules 文件。这说明添加成功了。将它提交，CI 报错了，克隆不下来。</p>
-<pre><code class="bash">$ git submodule update --init --recursive
+<pre><code class="shell">$ git submodule update --init --recursive
 Submodule &#39;themes/clover&#39; (git@github.com:initialdmg/hexo-theme-clover.git) registered for path &#39;themes/clover&#39;
 Cloning into &#39;/home/travis/build/initialdmg/blog/themes/clover&#39;...
 Warning: Permanently added the RSA host key for IP address &#39;192.30.253.113&#39; to the list of known hosts.
@@ -125,16 +125,16 @@ fatal: Could not read from remote repository.</code></pre>
 </ol>
 <p>将 url 修改为 https 后执行 <code>git submodule sync</code> 将gitconfig的url同步，然后提交就可以成功构建了。</p>
 <h2 id="克隆子模块"><a href="#克隆子模块" class="headerlink" title="克隆子模块"></a>克隆子模块</h2><p>当我们在其他地方进行仓库的克隆时，发现 themes/clover 是个空文件夹，意味着没有安装该主题。那么如何 clone 一个完整的仓库呢？只需如下操作即可：</p>
-<pre><code class="bash"># 方式一：使用  submodule init / update
+<pre><code class="shell"># 方式一：使用  submodule init / update
 git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git blog &amp;&amp; cd blog
 git submodule init &amp;&amp; git submodule update
 
 # 方式二：添加 --recursive 参数
 git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git --recursive</code></pre>
 <p>当该第三方主题更新了，我们可以更新子模块：</p>
-<pre><code class="bash">git submodule update --remote themes/skapp</code></pre>
+<pre><code class="shell">git submodule update --remote themes/skapp</code></pre>
 <p>或者切换至 themes/skapp 目录下使用 git 命令切换到不同的历史版本，如果对子模块执行了相关操作后，会提示 modified: themes/skapp (new commits)：</p>
-<pre><code class="bash">$ git status
+<pre><code class="shell">$ git status
 On branch source
 Your branch is up to date with &#39;origin/source&#39;.
 
