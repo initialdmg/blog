@@ -1,7 +1,9 @@
 ---
 title: Hexo 主题与 Git Submodule
 date: 2019-10-12 00:14:17
-tags: git
+tags:
+- git
+excerpt: 记录更换 Hexo 主题遇到的问题与解决方案，顺便学习一下 git submodule。
 ---
 
 # 添加克隆的第三方仓库遇到的submodule问题
