@@ -1,7 +1,7 @@
 ---
-title: git submodule trouble
+title: Hexo 主题与 Git Submodule
 date: 2019-10-12 00:14:17
-tags:
+tags: git
 ---
 
 # 添加克隆的第三方仓库遇到的submodule问题
@@ -48,7 +48,6 @@ Changes to be committed:
 Untracked files:
   (use "git add <file>..." to include in what will be committed)
         themes/clover/
-
 ```
 
 接着先不提交，直接重新添加submodule:
@@ -92,30 +91,31 @@ fatal: Could not read from remote repository.
 
 ```shell
 # 方式一：使用  submodule init / update
-git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git blog && cd blog
+git clone git@github.com:initialdmg/hexo-theme-clover.git blog && cd blog
 git submodule init && git submodule update
 
 # 方式二：添加 --recursive 参数
-git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git --recursive
+git clone git@github.com:initialdmg/hexo-theme-clover.git --recursive
 ```
 
 当该第三方主题更新了，我们可以更新子模块：
 
 ```shell
-git submodule update --remote themes/skapp
+git submodule update --remote themes/clover
 ```
-或者切换至 themes/skapp 目录下使用 git 命令切换到不同的历史版本，如果对子模块执行了相关操作后，会提示 modified: themes/skapp (new commits)：
+
+或者切换至 themes/clover 目录下使用 git 命令切换到不同的历史版本，如果对子模块执行了相关操作后，会提示 modified: themes/clover (new commits)：
 
 ```shell
 $ git status
-On branch source
-Your branch is up to date with 'origin/source'.
+On branch master
+Your branch is up to date with 'origin/master'.
 
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git checkout -- <file>..." to discard changes in working directory)
 
-        modified:   themes/skapp (new commits)
+        modified:   themes/clover (new commits)
 ```
 
 然后按正常流程提交并推送到远程仓库即可。
