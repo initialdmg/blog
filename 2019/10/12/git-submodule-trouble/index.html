@@ -3,19 +3,19 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>git submodule trouble | Vincent Ting&#39;s Blog</title>
+  <title>Hexo 主题与 Git Submodule | Vincent Ting&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="添加克隆的第三方仓库遇到的submodule问题今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我">
-<meta name="keywords" content="JavaScript, hexo, blog, HTML, CSS">
+<meta name="keywords" content="git">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git submodule trouble">
+<meta property="og:title" content="Hexo 主题与 Git Submodule">
 <meta property="og:url" content="https://initialdmg.github.io/blog/2019/10/12/git-submodule-trouble/index.html">
 <meta property="og:site_name" content="Vincent Ting&#39;s Blog">
 <meta property="og:description" content="添加克隆的第三方仓库遇到的submodule问题今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-11T17:57:57.309Z">
+<meta property="og:updated_time" content="2019-10-14T13:16:29.368Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git submodule trouble">
+<meta name="twitter:title" content="Hexo 主题与 Git Submodule">
 <meta name="twitter:description" content="添加克隆的第三方仓库遇到的submodule问题今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。 一看仓库里面，主题的文件夹根本就不能点击，我就怀疑 ci 拉不到这个主题，我">
   
   <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.15.10/styles/an-old-hope.min.css">
@@ -68,7 +68,7 @@
   </div>
 </nav>
     <div id="main"><section class="article">
-  <h2 class="title">git submodule trouble</h2>
+  <h2 class="title">Hexo 主题与 Git Submodule</h2>
   <p class="sub">10月 12, 2019</p>
   <article class="content">
     <h1 id="添加克隆的第三方仓库遇到的submodule问题"><a href="#添加克隆的第三方仓库遇到的submodule问题" class="headerlink" title="添加克隆的第三方仓库遇到的submodule问题"></a>添加克隆的第三方仓库遇到的submodule问题</h1><p>今天想把博客的默认theme给换了，于是fork了一个theme改成了自己的，然后克隆到项目目录下。在修改了theme后，git自动将克隆的theme文件夹识别为了submodule，我就直接提交更新了。修改了所有配置以后，我发现github pages里面反而啥也没有了。</p>
@@ -97,8 +97,7 @@ Changes to be committed:
 
 Untracked files:
   (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
-        themes/clover/
-</code></pre>
+        themes/clover/</code></pre>
 <p>接着先不提交，直接重新添加submodule:</p>
 <pre><code class="shell">$ git submodule add git@github.com:initialdmg/hexo-theme-clover.git themes/clover
 Adding existing repo at &#39;themes/clover&#39; to the index
@@ -126,23 +125,23 @@ fatal: Could not read from remote repository.</code></pre>
 <p>将 url 修改为 https 后执行 <code>git submodule sync</code> 将gitconfig的url同步，然后提交就可以成功构建了。</p>
 <h2 id="克隆子模块"><a href="#克隆子模块" class="headerlink" title="克隆子模块"></a>克隆子模块</h2><p>当我们在其他地方进行仓库的克隆时，发现 themes/clover 是个空文件夹，意味着没有安装该主题。那么如何 clone 一个完整的仓库呢？只需如下操作即可：</p>
 <pre><code class="shell"># 方式一：使用  submodule init / update
-git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git blog &amp;&amp; cd blog
+git clone git@github.com:initialdmg/hexo-theme-clover.git blog &amp;&amp; cd blog
 git submodule init &amp;&amp; git submodule update
 
 # 方式二：添加 --recursive 参数
-git clone git@github.com:y0ngb1n/y0ngb1n.github.io.git --recursive</code></pre>
+git clone git@github.com:initialdmg/hexo-theme-clover.git --recursive</code></pre>
 <p>当该第三方主题更新了，我们可以更新子模块：</p>
-<pre><code class="shell">git submodule update --remote themes/skapp</code></pre>
-<p>或者切换至 themes/skapp 目录下使用 git 命令切换到不同的历史版本，如果对子模块执行了相关操作后，会提示 modified: themes/skapp (new commits)：</p>
+<pre><code class="shell">git submodule update --remote themes/clover</code></pre>
+<p>或者切换至 themes/clover 目录下使用 git 命令切换到不同的历史版本，如果对子模块执行了相关操作后，会提示 modified: themes/clover (new commits)：</p>
 <pre><code class="shell">$ git status
-On branch source
-Your branch is up to date with &#39;origin/source&#39;.
+On branch master
+Your branch is up to date with &#39;origin/master&#39;.
 
 Changes not staged for commit:
   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
   (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
 
-        modified:   themes/skapp (new commits)</code></pre>
+        modified:   themes/clover (new commits)</code></pre>
 <p>然后按正常流程提交并推送到远程仓库即可。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://y0ngb1n.github.io/a/2270d168.html" target="_blank" rel="noopener">https://y0ngb1n.github.io/a/2270d168.html</a></li>
@@ -153,8 +152,8 @@ Changes not staged for commit:
   </article>
   <footer class="f-cf">
     
+      <a href="/blog/2019/10/14/hello-world/" class="link f-fl">⟵Hello World</a>
     
-      <a href="/blog/2019/10/11/hello-world/" class="link f-fr">Hello World⟶</a>
     
   </footer>
 </section></div>
