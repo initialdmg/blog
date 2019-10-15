@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>前端性能优化意识层小结 | Vincent Ting&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文由平时工作中遇到的性能问题，以及学习中的笔记总结而成，更偏向于概括，因此称之为意识层小结。持续更新……  前端性能问题我们平时浏览网页和使用 Web 应用中遇到的常见性能问题大致有：  加载时间长：资源载入解析慢、网络较差 页面卡顿：操作响应变慢 内存溢出：拖慢电脑、甚至网页崩溃  当然还有网络问题：无法控制的因素 这些问题的来源中最显而易见的原因就是 Web 应用本身变的越来越大，Web">
+<meta name="keywords" content="js,性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能优化意识层小结">
+<meta property="og:url" content="https://initialdmg.github.io/blog/2019/10/15/front-end-performance-optimize/index.html">
+<meta property="og:site_name" content="Vincent Ting&#39;s Blog">
+<meta property="og:description" content="本文由平时工作中遇到的性能问题，以及学习中的笔记总结而成，更偏向于概括，因此称之为意识层小结。持续更新……  前端性能问题我们平时浏览网页和使用 Web 应用中遇到的常见性能问题大致有：  加载时间长：资源载入解析慢、网络较差 页面卡顿：操作响应变慢 内存溢出：拖慢电脑、甚至网页崩溃  当然还有网络问题：无法控制的因素 这些问题的来源中最显而易见的原因就是 Web 应用本身变的越来越大，Web">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/aVp1YC8UV0elY5J3ByiaACdNibia22r5uZ21T0AvAZibO8Q5gkNcwfOSSib7bRB7VR7eyeFApS0R30qyOicm9s40HYgw/640">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/6/17/16b637393a752456?w=800&h=423&f=gif&s=208239">
+<meta property="og:updated_time" content="2019-10-15T15:30:17.595Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端性能优化意识层小结">
+<meta name="twitter:description" content="本文由平时工作中遇到的性能问题，以及学习中的笔记总结而成，更偏向于概括，因此称之为意识层小结。持续更新……  前端性能问题我们平时浏览网页和使用 Web 应用中遇到的常见性能问题大致有：  加载时间长：资源载入解析慢、网络较差 页面卡顿：操作响应变慢 内存溢出：拖慢电脑、甚至网页崩溃  当然还有网络问题：无法控制的因素 这些问题的来源中最显而易见的原因就是 Web 应用本身变的越来越大，Web">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/aVp1YC8UV0elY5J3ByiaACdNibia22r5uZ21T0AvAZibO8Q5gkNcwfOSSib7bRB7VR7eyeFApS0R30qyOicm9s40HYgw/640">
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.15.10/styles/an-old-hope.min.css">
+  <script src="//cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    });
+  </script>
+  <link rel="stylesheet" href="/blog/css/index.css">
+</head>
+</html>
+<body style="
+
+
+  background-color: #eff0f6
+
+">
+  <div id="container">
+    <nav id="nav">
+  <header class="header">
+    <a href="/blog/" class="title">Vinvent Ting</a>
+  </header>
+  <div class="ctnWrap">
+    <div class="icons">
+      
+        
+          
+            <a href="https://github.com/initialdmg" target="_blank" class="nav-icn iconfont icon-github"></a>
+          
+        
+      
+    </div>
+    <div class="menu">
+      
+        
+            <a href="/blog/" class="nav-menu ">HOME</a>
+          
+        
+            <a href="/blog/archives" class="nav-menu ">ARCHIVE</a>
+          
+        
+            <a href="/blog/about" class="nav-menu ">ABOUT</a>
+          
+        
+      
+    </div>
+  </div>
+</nav>
+    <div id="main"><section class="article">
+  <h2 class="title">前端性能优化意识层小结</h2>
+  <p class="sub">10月 15, 2019</p>
+  <article class="content">
+    <blockquote>
+<p>本文由平时工作中遇到的性能问题，以及学习中的笔记总结而成，更偏向于概括，因此称之为意识层小结。持续更新……</p>
+</blockquote>
+<h2 id="前端性能问题"><a href="#前端性能问题" class="headerlink" title="前端性能问题"></a>前端性能问题</h2><p>我们平时浏览网页和使用 Web 应用中遇到的常见性能问题大致有：</p>
+<ul>
+<li><strong>加载时间长</strong>：资源载入解析慢、网络较差</li>
+<li><strong>页面卡顿</strong>：操作响应变慢</li>
+<li><strong>内存溢出</strong>：拖慢电脑、甚至网页崩溃</li>
+</ul>
+<p><em>当然还有网络问题：无法控制的因素</em></p>
+<p>这些问题的来源中最显而易见的原因就是 Web 应用本身变的越来越大，Web 应用正在吃掉更多的资源：</p>
+<ul>
+<li>web 内容越来越丰富（图片等增多）</li>
+<li>功能和应用场景越来越复杂（SPA、动态页面）</li>
+<li>第三方库在 Web app 中使用率增加</li>
+<li>webpack 等工具让我们习惯模块化引入和打包，我们开始肆无忌惮地引用第三方库</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>提升 UX 最快方法：减少资源占用，加快载入速度。具体来说就是：<strong>压缩文件大小，减少网络请求</strong>。</p>
+<h4 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h4><ul>
+<li>使用jpg、webp（支持透明度、兼容性率差）等格式</li>
+<li>对图片进行压缩</li>
+<li>裁剪图片到必要的、适合的尺寸</li>
+<li>JPG/JPEG 渐进式图片（文件大小确定快，避免回流）</li>
+<li>按需加载（懒加载）</li>
+<li>小icon转为base64</li>
+</ul>
+<p><strong>关于dataUrl 的思考</strong></p>
+<ul>
+<li>css 文件变大，阻塞渲染（同步）</li>
+<li>css: 还没有用到的图片（如组件内）已经被转换进css</li>
+<li>模块化组件中重复的图片引用，转换后不利于利用缓存</li>
+<li>http2 正在普及：多路复用，并行请求</li>
+</ul>
+<h4 id="css、js"><a href="#css、js" class="headerlink" title="css、js"></a>css、js</h4><ul>
+<li>公共代码提取（css样式、js 通用方法）</li>
+<li>代码分割</li>
+<li>js 压缩</li>
+<li>TreeShake （打包工具）</li>
+</ul>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ul>
+<li>第三方包的使用：<ul>
+<li>使用独立后的版本（lodash \ Underscore）、js 内建函数</li>
+<li>直接引用需要的（echarts）</li>
+<li>按需加载（UI 框架）</li>
+<li>…</li>
+</ul>
+</li>
+<li>服务器端 gzip 压缩</li>
+</ul>
+<h2 id="JS-性能"><a href="#JS-性能" class="headerlink" title="JS 性能"></a>JS 性能</h2><p>这里所说的 JS 性能，不仅仅是 JS 本身，还包括DOM、浏览器引擎以及网络等方面。总的来说，可以归为一下几个方面：</p>
+<ul>
+<li>定时器</li>
+<li>DOM 操作</li>
+<li>减少重绘和回流</li>
+<li>算法</li>
+<li>Workers</li>
+<li>Ajax</li>
+</ul>
+<h3 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h3><p><code>setInterval</code> 和 <code>clearInterval</code> *<em>同时出现</em>：设置定时器以后一定记得在合适的时机清除定时器，否则它可能会成为一颗炸弹，让你的页面崩溃！</p>
+<p>在使用框架时，如果定时器伴随组件存在，那么应该在组件销毁、卸载时清楚定时器：<code>beforeDestroy</code>、 <code>componentWillUnmount</code>。</p>
+<p>和定时器类似，<code>onmousemove</code>鼠标移动函数会随着鼠标移动一直触发其回调函数，我们可以把它想象为一个和手速绑定的定时器，如果回调中的逻辑比较复杂，那么必将非常消耗资源。因此最好对<code>onmousemove</code>进行回流。一般当帧率达到 24fps 时，人眼即认为是流畅的（视觉停留效应，24fps是电影制作标准）。在 25fps 时即 40ms 触发一次，应当可以满足需求。</p>
+<pre><code class="js">onmousemove = throttle(Foo, 40) // **不要忘了注销**</code></pre>
+<h3 id="DOM-操作、重绘与回流"><a href="#DOM-操作、重绘与回流" class="headerlink" title="DOM 操作、重绘与回流"></a>DOM 操作、重绘与回流</h3><p>JS 操作 DOM 是比较消耗资源的，当触发重绘或回流时更甚。</p>
+<ul>
+<li>DOM 读写时，将多个操作合并；缓存DOM；使用 MV* 等虚拟 DOM 框架，减少接口互操作</li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/aVp1YC8UV0elY5J3ByiaACdNibia22r5uZ21T0AvAZibO8Q5gkNcwfOSSib7bRB7VR7eyeFApS0R30qyOicm9s40HYgw/640" alt="浏览器解析过程"></p>
+<ul>
+<li>回流(reflow): 元素的内容、结构、位置或尺寸发生变化，需重新计算样式和生成渲染树；读取元素的某些属性时也会触发</li>
+<li>重绘(repaint): 元素样式改变，调用 GPU 重新绘制新样式</li>
+</ul>
+<p><strong>回流必引起重绘</strong>，回流将导致大量计算成本开销很大。</p>
+<p>优化：</p>
+<ul>
+<li>避免逐个修改节点样式，特别是循环</li>
+<li>优化需频繁修改元素的过程：<code>DocumentFragment</code>、<code>display: none</code>等</li>
+<li>合并composite读写 DOM 操作（尽管浏览器会优化）、虚拟DOM</li>
+<li>替换导致回流的 API：如 <code>innerText</code> 改为 <code>textContent</code>，……</li>
+</ul>
+<h3 id="其他方面"><a href="#其他方面" class="headerlink" title="其他方面"></a>其他方面</h3><ol>
+<li>算法：提高效率，减少内存开销</li>
+<li>Workers: 使用多进程，加快计算型任务执行速度</li>
+<li>Ajax：避免同步操作阻塞进程和UI</li>
+</ol>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><p>JS 引擎采用垃圾自动回收（GC）机制：当分配的内存不再被任何变量或函数使用时，便将其释放。这也是引用计数 GC 法的基本原理，其一大缺点是循环引用的内存无法释放。</p>
+<pre><code class="js">function f(){
+  var o = {}, o2 = {};
+  o.a = o2; // o 引用 o2
+  o2.a = o; // o2 引用 o
+  return &quot;azerty&quot;;
+}
+f();</code></pre>
+<p>现代浏览器使用<code>标记清除算法</code>。如果内存没能收回，就会产生内泄漏。</p>
+<h3 id="标记清除法"><a href="#标记清除法" class="headerlink" title="标记清除法"></a>标记清除法</h3><p>将“不再使用的对象”定义为“无法达到的对象”，定时将存在标记的变量销毁并回收内存。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/6/17/16b637393a752456?w=800&h=423&f=gif&s=208239" alt="标记清除法"></p>
+<h3 id="常见内存泄漏来源"><a href="#常见内存泄漏来源" class="headerlink" title="常见内存泄漏来源"></a>常见内存泄漏来源</h3><ul>
+<li>意外的全局变量</li>
+<li>被遗忘的定时器和回调函数</li>
+<li>闭包</li>
+<li>DOM 引用</li>
+</ul>
+<h4 id="意外的全局变量"><a href="#意外的全局变量" class="headerlink" title="意外的全局变量"></a>意外的全局变量</h4><pre><code class="js">function foo() {
+  bar1 = &#39;some text&#39;; // 没有声明变量 实际上是全局变量 =&gt; window.bar1
+  this.bar2 = &#39;some text&#39; // 全局变量 =&gt; window.bar2
+}
+foo();</code></pre>
+<h4 id="定时器和回调函数"><a href="#定时器和回调函数" class="headerlink" title="定时器和回调函数"></a>定时器和回调函数</h4><pre><code class="js">var serverData = loadData();
+setInterval(function() {
+  var renderer = document.getElementById(&#39;renderer&#39;);
+  if(renderer) {
+    renderer.innerHTML = JSON.stringify(serverData);  // serverData无法回收
+  }
+}, 5000);</code></pre>
+<h4 id="DOM-引用"><a href="#DOM-引用" class="headerlink" title="DOM 引用"></a>DOM 引用</h4><p>即使删除了DOM节点，对DOM节点的引用会导致其对应的内存无法回收。</p>
+<pre><code class="js">var elements = {
+    button: document.getElementById(&#39;button&#39;)
+};
+function removeButton() {
+    document.body.removeChild(document.getElementById(&#39;button&#39;));
+    // 此时，仍旧存在一个全局的 #button 的引用
+    // elements 字典中 button 元素仍旧在内存中，不能被 GC 回收。
+}
+removeButton();
+elements.button = null; //释放</code></pre>
+<h4 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h4><p>在函数外部能够通过其内部（子）函数访问包含它的变量(共享作用域)。</p>
+<p>MDN: 闭包是由函数以及创建该函数的词法环境组合而成。<strong>这个环境包含了这个闭包创建时所能访问的所有局部变量</strong>。</p>
+<pre><code class="js">var makeAdd = x =&gt; y =&gt; x + y // 工厂函数
+var add5 = makeAdd(5) // function add5(y) { return 5 + y  }
+
+console.log(add5(2)) // 7
+
+add5 = null // 释放</code></pre>
+<p>通过闭包可读取函数的内部变量，也让变量的值始终保持在内存中</p>
+<pre><code class="js">var theThing = null;
+function replaceThing() {
+  var originalThing = theThing;
+  var unused = function () {
+    if (originalThing) { console.log(&quot;hi&quot;); } // 对于&#39;originalThing&#39;的引用
+  };
+  theThing = {
+    longStr: new Array(100).join(&#39;*&#39;),
+    someMethod: function () { /* 即便是空函数 */ }
+  };
+};
+setInterval(replaceThing, 1000);  // 定时器结合闭包或DOM引用造成严重内存泄露</code></pre>
+<h3 id="内存泄漏检查"><a href="#内存泄漏检查" class="headerlink" title="内存泄漏检查"></a>内存泄漏检查</h3><p>自动 GC 不是万能的……</p>
+<p>DevTools: <strong>Peformance</strong> 和 <strong>Memory</strong></p>
+<p>当 Peformance 中的 JS Heap 曲线一直上升，就是有内存泄漏。<br>通过 Memory 中两个内存堆栈对比可以检查是哪里导致的泄漏。</p>
+
+  </article>
+  <footer class="f-cf">
+    
+    
+      <a href="/blog/2019/10/14/Why-do-i-start-writting/" class="link f-fr">Why do i start writting?⟶</a>
+    
+  </footer>
+</section></div>
+    <footer id="footer" class="f-cf">
+  dmiaoguo@gmail.com
+  
+    
+      
+        · <a href="https://github.com/initialdmg" target="_blank" class="nav-icn">GitHub</a>
+      
+    
+  
+  <span class="copyright">All rights reserved.</span>
+</footer>
+  </div>
+</body>
+</html>
