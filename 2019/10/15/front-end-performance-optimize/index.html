@@ -13,13 +13,13 @@
 <meta property="og:site_name" content="Vincent Ting&#39;s Blog">
 <meta property="og:description" content="本文由平时工作中遇到的性能问题，以及学习中的笔记总结而成，更偏向于概括，因此称之为意识层小结。持续更新……  前端性能问题我们平时浏览网页和使用 Web 应用中遇到的常见性能问题大致有：  加载时间长：资源载入解析慢、网络较差 页面卡顿：操作响应变慢 内存溢出：拖慢电脑、甚至网页崩溃  当然还有网络问题：无法控制的因素 这些问题的来源中最显而易见的原因就是 Web 应用本身变的越来越大，Web">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/aVp1YC8UV0elY5J3ByiaACdNibia22r5uZ21T0AvAZibO8Q5gkNcwfOSSib7bRB7VR7eyeFApS0R30qyOicm9s40HYgw/640">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/6/17/16b637393a752456?w=800&h=423&f=gif&s=208239">
-<meta property="og:updated_time" content="2019-10-17T15:57:10.214Z">
+<meta property="og:image" content="https://initialdmg.github.io/blog/images/browser-parse-process.jpg">
+<meta property="og:image" content="https://initialdmg.github.io/blog/images/mark_and_sweep_gc.jpg">
+<meta property="og:updated_time" content="2019-10-17T16:31:29.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端性能优化意识层小结">
 <meta name="twitter:description" content="本文由平时工作中遇到的性能问题，以及学习中的笔记总结而成，更偏向于概括，因此称之为意识层小结。持续更新……  前端性能问题我们平时浏览网页和使用 Web 应用中遇到的常见性能问题大致有：  加载时间长：资源载入解析慢、网络较差 页面卡顿：操作响应变慢 内存溢出：拖慢电脑、甚至网页崩溃  当然还有网络问题：无法控制的因素 这些问题的来源中最显而易见的原因就是 Web 应用本身变的越来越大，Web">
-<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/aVp1YC8UV0elY5J3ByiaACdNibia22r5uZ21T0AvAZibO8Q5gkNcwfOSSib7bRB7VR7eyeFApS0R30qyOicm9s40HYgw/640">
+<meta name="twitter:image" content="https://initialdmg.github.io/blog/images/browser-parse-process.jpg">
   
   <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.15.10/styles/an-old-hope.min.css">
   <script src="//cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js"></script>
@@ -132,7 +132,7 @@
 <li>Workers</li>
 <li>Ajax</li>
 </ul>
-<h3 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h3><p><code>setInterval</code> 和 <code>clearInterval</code> *<em>同时出现</em>：设置定时器以后一定记得在合适的时机清除定时器，否则它可能会成为一颗炸弹，让你的页面崩溃！</p>
+<h3 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h3><p><code>setInterval</code> 和 <code>clearInterval</code> <strong>同时出现</strong>：设置定时器以后一定记得在合适的时机清除定时器，否则它可能会成为一颗炸弹，让你的页面崩溃！</p>
 <p>在使用框架时，如果定时器伴随组件存在，那么应该在组件销毁、卸载时清楚定时器：<code>beforeDestroy</code>、 <code>componentWillUnmount</code>。</p>
 <p>和定时器类似，<code>onmousemove</code>鼠标移动函数会随着鼠标移动一直触发其回调函数，我们可以把它想象为一个和手速绑定的定时器，如果回调中的逻辑比较复杂，那么必将非常消耗资源。因此最好对<code>onmousemove</code>进行回流。一般当帧率达到 24fps 时，人眼即认为是流畅的（视觉停留效应，24fps是电影制作标准）。在 25fps 时即 40ms 触发一次，应当可以满足需求。</p>
 <pre><code class="js">onmousemove = throttle(Foo, 40) // **不要忘了注销**</code></pre>
@@ -140,7 +140,7 @@
 <ul>
 <li>DOM 读写时，将多个操作合并；缓存DOM；使用 MV* 等虚拟 DOM 框架，减少接口互操作</li>
 </ul>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/aVp1YC8UV0elY5J3ByiaACdNibia22r5uZ21T0AvAZibO8Q5gkNcwfOSSib7bRB7VR7eyeFApS0R30qyOicm9s40HYgw/640" alt="浏览器解析过程"></p>
+<p><img src="/blog/images/browser-parse-process.jpg" alt="浏览器解析过程"></p>
 <ul>
 <li>回流(reflow): 元素的内容、结构、位置或尺寸发生变化，需重新计算样式和生成渲染树；读取元素的某些属性时也会触发</li>
 <li>重绘(repaint): 元素样式改变，调用 GPU 重新绘制新样式</li>
@@ -168,7 +168,7 @@
 f();</code></pre>
 <p>现代浏览器使用<code>标记清除算法</code>。如果内存没能收回，就会产生内泄漏。</p>
 <h3 id="标记清除法"><a href="#标记清除法" class="headerlink" title="标记清除法"></a>标记清除法</h3><p>将“不再使用的对象”定义为“无法达到的对象”，定时将存在标记的变量销毁并回收内存。</p>
-<p><img src="https://user-gold-cdn.xitu.io/2019/6/17/16b637393a752456?w=800&h=423&f=gif&s=208239" alt="标记清除法"></p>
+<p><img src="/blog/images/mark_and_sweep_gc.jpg" alt="标记清除法"></p>
 <h3 id="常见内存泄漏来源"><a href="#常见内存泄漏来源" class="headerlink" title="常见内存泄漏来源"></a>常见内存泄漏来源</h3><ul>
 <li>意外的全局变量</li>
 <li>被遗忘的定时器和回调函数</li>
@@ -206,7 +206,7 @@ var add5 = makeAdd(5) // function add5(y) { return 5 + y  }
 console.log(add5(2)) // 7
 
 add5 = null // 释放</code></pre>
-<p>通过闭包可读取函数的内部变量，也让变量的值始终保持在内存中</p>
+<p>通过闭包可读取函数的内部变量，也让变量的值始终保持在内存中。</p>
 <pre><code class="js">var theThing = null;
 function replaceThing() {
   var originalThing = theThing;
@@ -225,6 +225,8 @@ setInterval(replaceThing, 1000);  // 定时器结合闭包或DOM引用造成严�
 
   </article>
   <footer class="f-cf">
+    
+      <a href="/blog/2019/10/17/README/" class="link f-fl">⟵</a>
     
     
       <a href="/blog/2019/10/14/Why-do-i-start-writting/" class="link f-fr">Why do i start writting?⟶</a>
