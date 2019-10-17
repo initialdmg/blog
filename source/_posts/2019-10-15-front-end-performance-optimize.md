@@ -75,7 +75,7 @@ tags:
 
 ### 定时器
 
-`setInterval` 和 `clearInterval` **同时出现*：设置定时器以后一定记得在合适的时机清除定时器，否则它可能会成为一颗炸弹，让你的页面崩溃！
+`setInterval` 和 `clearInterval` **同时出现**：设置定时器以后一定记得在合适的时机清除定时器，否则它可能会成为一颗炸弹，让你的页面崩溃！
 
 在使用框架时，如果定时器伴随组件存在，那么应该在组件销毁、卸载时清楚定时器：`beforeDestroy`、 `componentWillUnmount`。
 
@@ -91,7 +91,7 @@ JS 操作 DOM 是比较消耗资源的，当触发重绘或回流时更甚。
 
 - DOM 读写时，将多个操作合并；缓存DOM；使用 MV* 等虚拟 DOM 框架，减少接口互操作
 
-![浏览器解析过程](https://mmbiz.qpic.cn/mmbiz_png/aVp1YC8UV0elY5J3ByiaACdNibia22r5uZ21T0AvAZibO8Q5gkNcwfOSSib7bRB7VR7eyeFApS0R30qyOicm9s40HYgw/640)
+![浏览器解析过程](/blog/images/browser-parse-process.jpg)
 
 - 回流(reflow): 元素的内容、结构、位置或尺寸发生变化，需重新计算样式和生成渲染树；读取元素的某些属性时也会触发
 - 重绘(repaint): 元素样式改变，调用 GPU 重新绘制新样式
@@ -131,7 +131,7 @@ f();
 
 将“不再使用的对象”定义为“无法达到的对象”，定时将存在标记的变量销毁并回收内存。
 
-![标记清除法](https://user-gold-cdn.xitu.io/2019/6/17/16b637393a752456?w=800&h=423&f=gif&s=208239)
+![标记清除法](/blog/images/mark_and_sweep_gc.jpg)
 
 ### 常见内存泄漏来源
 
@@ -194,7 +194,7 @@ console.log(add5(2)) // 7
 add5 = null // 释放
 ```
 
-通过闭包可读取函数的内部变量，也让变量的值始终保持在内存中
+通过闭包可读取函数的内部变量，也让变量的值始终保持在内存中。
 
 ```js
 var theThing = null;
