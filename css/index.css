@@ -229,7 +229,8 @@ body {
   background-color: white;
   color: #333;
   font-size: 16px;
-  line-height: 30px; }
+  line-height: 30px;
+  margin-bottom: 15px; }
   .article > .title {
     font-size: 28px;
     line-height: 40px;
@@ -254,7 +255,8 @@ body {
       padding: 0;
       color: #333;
       font-size: 13px;
-      background: #f8f8f8; }
+      background: #f8f8f8;
+      border-radius: 4px; }
       .article > .content pre .gutter, .article > .content .highlight .gutter {
         text-align: right; }
         .article > .content pre .gutter pre, .article > .content .highlight .gutter pre {

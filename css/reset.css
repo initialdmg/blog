@@ -50,3 +50,9 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+/* highlight.js github background */
+
+.hljs {
+	background: #f6f8fa;
+}
