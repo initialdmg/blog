@@ -18,10 +18,12 @@ tags:
 既然这个效果这么好，我要扒一下这是个怎么用法。通过 F12 我们搞到了它的 CSS 代码：
 
 ```css
-backdrop-filter: saturate(180%) blur(20px);
-background-color: rgba(255,255,255,0.7);
-transition: background-color 0.5s cubic-bezie(0.28, 0.11, 0.32, 1);
-transition-property: background-color,backdrop-filter, -webkit-backdrop-filter;
+.test {
+    backdrop-filter: saturate(180%) blur(20px);
+    background-color: rgba(255,255,255,0.7);
+    transition: background-color 0.5s cubic-bezie(0.28, 0.11, 0.32, 1);
+    transition-property: background-color,backdrop-filter, -webkit-backdrop-filter;
+}
 ```
 
 嗯，这个白色很好看，这个过渡效果也很赞，毛玻璃效果从这个 `backdrop-filter` 来，可是这个属性我咋没见过呢...没见过咱们就去 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/backdrop-filter) 见见。好嘛，实验性特性，草案阶段，不能怪自己。那么接下来，我们就看一下这个属性是怎么回事。
@@ -35,16 +37,18 @@ transition-property: background-color,backdrop-filter, -webkit-backdrop-filter;
 一个示例列表：
 
 ```css
-backdrop-filter: blur(2px);
-backdrop-filter: brightness(60%);
-backdrop-filter: contrast(40%);
-backdrop-filter: drop-shadow(4px 4px 10px blue);
-backdrop-filter: grayscale(30%);
-backdrop-filter: hue-rotate(120deg);
-backdrop-filter: invert(70%);
-backdrop-filter: opacity(20%);
-backdrop-filter: sepia(90%);
-backdrop-filter: saturate(80%);
+.list {
+    backdrop-filter: blur(2px);
+    backdrop-filter: brightness(60%);
+    backdrop-filter: contrast(40%);
+    backdrop-filter: drop-shadow(4px 4px 10px blue);
+    backdrop-filter: grayscale(30%);
+    backdrop-filter: hue-rotate(120deg);
+    backdrop-filter: invert(70%);
+    backdrop-filter: opacity(20%);
+    backdrop-filter: sepia(90%);
+    backdrop-filter: saturate(80%);
+}
 ```
 
 可用的 `filter-function` 如下：
@@ -65,8 +69,10 @@ backdrop-filter: saturate(80%);
 现在我们再看一下苹果网站的那个磨玻璃效果是咋回事儿。
 
 ```css
-backdrop-filter: saturate(180%) blur(20px);
-background-color: rgba(255,255,255,0.7);
+nav {
+    backdrop-filter: saturate(180%) blur(20px);
+    background-color: rgba(255,255,255,0.7);
+}
 ```
 
 首先要使用这个效果，先得让元素有一点透明度。然后模糊个 20px，现在有模糊的效果了，至于加饱和度，我觉得是因为白色叠在上面作为主色，显得太淡，加一点饱和度让背景的颜色更浓一点（反正我这个开发眼看不出区别多大）。
@@ -94,8 +100,10 @@ background-color: rgba(255,255,255,0.7);
 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/position#Sticky_positioning) 将其翻译为`粘性定位`。它的作用是依据元素相对于视口的位置来决定其位置为相对`relative`还是固定`fixed`。元素在跨越特定阈值前为相对定位，之后为固定定位。
 
 ```css
-position: sticky;
-top: 0;
+.sticky {
+    position: sticky;
+    top: 0;
+}
 ```
 
 这个对于导航来说就是，当视口 viewport 滚动到元素与视口top距离为0时变为固定定位，在这之前是相对定位。
